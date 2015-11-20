@@ -7,7 +7,7 @@ class ReflowLogger():
        self.baud=57600
        self.tty='/dev/ttyUSB0'
        self.logFile='reflow.log'
-       self.writeLog=self.openFile()
+       self.openFile()
 
     def connect(self):
         self.conn=serial.Serial(self.tty,self.baud)
@@ -22,13 +22,16 @@ class ReflowLogger():
         self.logFid=open(self.logFile,'w')
         if self.logFid:
             print "Opened Log File Successfully"
+            self.writeLog=True
         else:
             print "Failed to open Log, skipping logging"
+            self.writeLog=False
 
     def readSerial(self):
         msg = self.conn.read(self.conn.inWaiting()).strip()
         if self.writeLog:
             self.logFid.write(msg+"\n")
+            self.logFid.flush()
         return msg
 
 if __name__=="__main__":
