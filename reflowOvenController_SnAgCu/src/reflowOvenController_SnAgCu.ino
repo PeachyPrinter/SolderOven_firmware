@@ -37,10 +37,10 @@
 *     |     x         |                   |                          |
 *     |   x           |                   |                          |
 * 30 -| x             |                   |                          |
-*     |<  60 - 90 s  >|<    90 - 120 s   >|<       90 - 120 s       >|
+*     |<    60 s     >|<   60s - 180 s   >|<      180 - 310 s       >|
 *     | Preheat Stage |   Soaking Stage   |       Reflow Stage       | Cool
 *  0  |_ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-*                                                                Time (Seconds)
+*                    60                  180                        310  (Seconds)
 *
 * This firmware owed very much on the works of other talented individuals as
 * follows:
@@ -145,9 +145,9 @@ typedef enum DEBOUNCE_STATE
 
 // ***** CONSTANTS *****
 #define TEMPERATURE_ROOM 50
-#define TEMPERATURE_SOAK_MIN 140
-#define TEMPERATURE_SOAK_MAX 180
-#define TEMPERATURE_REFLOW_MAX 255
+#define TEMPERATURE_SOAK_MIN 150
+#define TEMPERATURE_SOAK_MAX 200
+#define TEMPERATURE_REFLOW_MAX 260
 #define TEMPERATURE_COOL_MIN 45
 #define SENSOR_SAMPLING_TIME 1000
 #define SOAK_TEMPERATURE_STEP 5
