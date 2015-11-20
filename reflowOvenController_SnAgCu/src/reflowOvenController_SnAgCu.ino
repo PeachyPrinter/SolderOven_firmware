@@ -106,7 +106,7 @@
 #ifdef	USE_MAX31855
 	#include "MAX31855.h"
 #else
-	#include <max6675.h>
+//	#include <max6675.h>
 #endif
 #include "PID_v1.h"
 
