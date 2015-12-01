@@ -2,7 +2,8 @@
 import serial
 import time
 import os
-import matplotlib.pyplot as plt
+import atexit
+from PeachyGrapher import PeachyGrapher
 
 
 class ReflowLogger():
@@ -10,14 +11,8 @@ class ReflowLogger():
        self.baud=57600
        self.tty='/dev/ttyUSB0'
        self.logFile='reflow'
-       self.openFile()
-       self.setupPyplot()
-
-    def setupPyplot(self):
        self.temps=[]
-       self.fig=plt.figure()
-       plt.ion()
-       self.fig.show()
+       self.openFile()
 
     def connect(self):
         self.conn=serial.Serial(self.tty,self.baud)
@@ -59,16 +54,27 @@ class ReflowLogger():
                 self.temps.append(float(split_msg[2]))
             except:
                 print "tried to graph not an int"
-            plt.pause(0.001)
-            plt.plot(self.temps)
-            plt.pause(0.001)
-        return msg
+        return split_msg
+
+def save_exit():
+    print "Exiting Cleanly and saving graph"
+    grapher.saveGraph("reflow.png")
 
 if __name__=="__main__":
     logger=ReflowLogger()
+    grapher=PeachyGrapher(title="Reflow Curve",xlabel="seconds (s)",ylabel="Temperature (C)")
     connectionStatus=logger.connect()
-    while(1):
+    atexit.register(save_exit)
+    while(connectionStatus):
         msg=logger.readSerial()
-        if msg:
+        if (len(msg)==4):
+            try:
+                if float(msg[2])<500:
+                    grapher.addPoint(float(msg[2]))
+                    #grapher.saveGraph("reflow.png")
+                else:
+                    print "Got Bad result, Thermal Couple Die again?"
+            except:
+                print "Bad Graphing Line"
             print msg
         time.sleep(0.1)
