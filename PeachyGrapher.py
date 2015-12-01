@@ -81,7 +81,7 @@ if __name__ == '__main__':
         grapher.saveGraph("50_point_dyamic.png")
 
         #test code for set size graph:
-        grapher2=PeachyGrapher(graphsize=20)
+        grapher2=PeachyGrapher(title='TITLE',xlabel='XXX',ylabel='YYY',graphsize=20,numlines=1)
         for i in range(0,testLen):
             grapher2.addPoint(random.randint(0,100))
         grapher2.saveGraph("20_point_static.png")
