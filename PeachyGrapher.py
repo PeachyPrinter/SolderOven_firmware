@@ -5,14 +5,15 @@ import time
 import random
 
 class PeachyGrapher():
-    def __init__(self,title='',xlabel='',ylabel='',graphsize=0,numlines=1):
-        print "Initialized Grapher"
+    def __init__(self,title='',xlabel='',ylabel='',graphsize=0,numlines=1,legend='',padding=0):
         self.graphsize=graphsize
         self.numlines=numlines
         self.axLabels=[title,xlabel,ylabel]
         self.graphData=[[] for i in range(self.numlines)]
         self.graphLimits={"min":0,"max":0}
+        self.padding=0
         self.lines=[]
+        self.legends=legend
         self.graphSetup()
 
     def saveGraph(self,filename='savedGraph.png'):
@@ -43,8 +44,7 @@ class PeachyGrapher():
         self.graphLimits['min']=graphMin
         self.graphLimits['max']=graphMax
         plt.xlim(0,len(self.graphData[0]))
-        plt.ylim(self.graphLimits['min'],self.graphLimits['max'])
-        plt.ylim(graphMin,graphMax)
+        plt.ylim(graphMin-self.padding,graphMax+self.padding)
         self.drawGraph()
 
     def graphSetup(self):
@@ -57,8 +57,17 @@ class PeachyGrapher():
         for i in range(self.numlines):
             if self.graphsize!=0: #static sliding window
                 self.graphData[i]=[0]*self.graphsize
-            temp_ln, = self.ax.plot([], [])
+            temp_ln=self.lineSetup(i)
             self.lines.append(temp_ln)
+
+    def lineSetup(self,num):
+        if len(self.legends)==0: #no legends
+            temp_ln, = self.ax.plot([], [])
+        else: #at least 1 legend
+            temp_ln, = self.ax.plot([], [],label=self.legends[num])
+            temp_legend = plt.legend(handles=[temp_ln], loc=num+1)
+            plt.gca().add_artist(temp_legend)
+        return temp_ln
 
     def drawGraph(self):
         #for i,ydata in enumerate(self.graphData):
@@ -70,34 +79,34 @@ class PeachyGrapher():
         self.fig.canvas.flush_events()
 
 if __name__ == '__main__':
-
+    print" Available configs: title='',xlabel='',ylabel='',graphsize=0,numlines=1,legend=[],padding=0"
     test=True
     testLen=100
     if test:
         #test code for live graph that grows and shows all:
-        grapher=PeachyGrapher("Title","xlabel","ylabel")
+        grapher=PeachyGrapher("Title","xlabel","ylabel",legend=["test legend"])
         for i in range(0,testLen):
             grapher.addPoint(i)
-        grapher.saveGraph("50_point_dyamic.png")
+        grapher.saveGraph("1_line_dyamic.png")
 
         #test code for set size graph:
-        grapher2=PeachyGrapher(title='TITLE',xlabel='XXX',ylabel='YYY',graphsize=20,numlines=1)
+        grapher2=PeachyGrapher(title='TITLE',xlabel='XXX',ylabel='YYY',graphsize=20,numlines=1,legend=["string legend"],padding=2)
         for i in range(0,testLen):
             grapher2.addPoint(random.randint(0,100))
-        grapher2.saveGraph("20_point_static.png")
+        grapher2.saveGraph("1_line_static.png")
 
         #test code for multiLine static:
-        grapher3=PeachyGrapher(graphsize=20,numlines=3)
+        grapher3=PeachyGrapher(graphsize=20,numlines=3,legend=["one","two","three"])
         for i in range(0,testLen):
             rando=random.randint(0,10)
             grapher3.addPoint([rando,rando+2,rando+5])
         grapher3.saveGraph("3_line_static.png")
 
         #test code for multiLine dynamic:
-        grapher4=PeachyGrapher(numlines=3)
+        grapher4=PeachyGrapher(numlines=5)
         for i in range(0,testLen):
             rando=random.randint(0,10)
-            grapher4.addPoint([rando,rando+2,rando+5])
+            grapher4.addPoint([rando,rando+2,rando+5,rando-2,rando-5])
         grapher4.saveGraph("3_line_dynamic.png")
 
         print "Done test, press enter after looking at graphs"
