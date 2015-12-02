@@ -16,8 +16,8 @@ class PeachyGrapher():
         self.legends=legend
         self.graphSetup()
 
-    def saveGraph(self,filename='savedGraph.png'):
-        self.fig.savefig(filename)
+    def saveGraph(self,filename='savedGraph.png',dpi=100):
+        self.fig.savefig(filename,dpi=dpi)
 
     def addPoint(self,data):
         try:
@@ -87,20 +87,20 @@ if __name__ == '__main__':
         grapher=PeachyGrapher("Title","xlabel","ylabel",legend=["test legend"])
         for i in range(0,testLen):
             grapher.addPoint(i)
-        grapher.saveGraph("1_line_dyamic.png")
+        grapher.saveGraph("1_line_dyamic.png",dpi=50)
 
         #test code for set size graph:
         grapher2=PeachyGrapher(title='TITLE',xlabel='XXX',ylabel='YYY',graphsize=20,numlines=1,legend=["string legend"],padding=2)
         for i in range(0,testLen):
             grapher2.addPoint(random.randint(0,100))
-        grapher2.saveGraph("1_line_static.png")
+        grapher2.saveGraph("1_line_static.png",dpi=100)
 
         #test code for multiLine static:
         grapher3=PeachyGrapher(graphsize=20,numlines=3,legend=["one","two","three"])
         for i in range(0,testLen):
             rando=random.randint(0,10)
             grapher3.addPoint([rando,rando+2,rando+5])
-        grapher3.saveGraph("3_line_static.png")
+        grapher3.saveGraph("3_line_static.png",dpi=200)
 
         #test code for multiLine dynamic:
         grapher4=PeachyGrapher(numlines=5)
